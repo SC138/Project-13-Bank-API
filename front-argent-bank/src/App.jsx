@@ -1,20 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import { SignIn } from "./pages/SignIn/SignIn";
-import { UserProfil } from "./pages/UserProfil/UserProfil";
+import { UserProfile } from "./pages/UserProfile/UserProfile";
+import { useSelector } from "react-redux";
 import "./global.css";
 
 function App() {
+  const isAuth = useSelector((state) => state.login.isAuth);
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/profil" element={<UserProfil />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/sign-in" element={<SignIn />} />
+      {isAuth ? (
+        <Route path="/profile" element={<UserProfile />} />
+      ) : (
+        <Route path="/profile" element={<SignIn />} />
+      )}
+    </Routes>
   );
 }
 
 export default App;
-// test

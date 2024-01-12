@@ -1,21 +1,40 @@
 import { NavBar } from "../../components/NavBar.jsx";
 import { Footer } from "../../components/Footer.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../store/actions/loginActions";
 
 export function SignIn() {
-  const [formDatas, setFormDatas] = useState({
-    formDatas: [{ username: "", password: "" }],
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuth = useSelector((state) => state.login.isAuth);
+  const token = useSelector((state) => state.login.token);
+  const error = useSelector((state) => state.login.error);
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
   });
+
   const handleChange = (event) => {
-    setFormDatas({
-      formDatas: [
-        { ...formDatas.formDatas, [event.target.name]: event.target.value },
-      ],
-    });
+    setFormData({ ...formData, [event.target.name]: event.target.value });
   };
+
   const handleSubmit = (event) => {
+    dispatch(login(formData));
     event.preventDefault();
   };
+
+  useEffect(() => {
+    const datas = async () => {
+      if (isAuth) {
+        localStorage.setItem("token", token);
+        navigate("/profile");
+      }
+    };
+    datas();
+  }, [isAuth, navigate, token]);
 
   return (
     <>
@@ -24,13 +43,14 @@ export function SignIn() {
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>
           <h1>Sign In</h1>
-          <form onSubmit={() => handleSubmit(formDatas)}>
+          <form onSubmit={handleSubmit}>
             <div className="input-wrapper">
-              <label htmlFor="username">Username</label>
+              <label htmlFor="email">Username</label>
               <input
                 type="text"
-                id="username"
-                name="username"
+                id="email"
+                value={formData.email}
+                name="email"
                 onChange={handleChange}
               />
             </div>
@@ -39,6 +59,7 @@ export function SignIn() {
               <input
                 type="password"
                 id="password"
+                value={formData.password}
                 name="password"
                 onChange={handleChange}
               />
@@ -51,6 +72,7 @@ export function SignIn() {
               Sign In
             </button>
           </form>
+            {error && <p className="error">{error}</p>}
         </section>
       </main>
       <Footer />
