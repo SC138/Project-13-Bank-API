@@ -1,7 +1,14 @@
 import { NavBar } from "../../components/NavBar";
 import { Footer } from "../../components/Footer";
+import { useSelector } from "react-redux";
+import { profileActions } from "../../store/actions/profileActions.js";
 
 export function UserProfile() {
+  const user = useSelector((state) => state.profile);
+  console.log("🚀 ~ UserProfile ~ user:", user)
+  const token = useSelector((state) => state.login.token);
+  console.log("🚀 ~ UserProfile ~ token:", token)
+
   return (
     <>
       <NavBar />
@@ -10,7 +17,8 @@ export function UserProfile() {
           <h1>
             Welcome back
             <br />
-            Tony Jarvis!
+            {`${user.firstname} ${user.lastname}`}!
+            {/* Tony Jarvis! */}
           </h1>
           <button className="edit-button">Edit Name</button>
         </div>

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/actions/loginActions";
+// import profileReducer from "../../store/reducers/profileReducer";
+import { profileActions } from "../../store/actions/profileActions.js";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -22,8 +24,9 @@ export function SignIn() {
   };
 
   const handleSubmit = (event) => {
-    dispatch(login(formData));
     event.preventDefault();
+    dispatch(login(formData));
+    dispatch(profileActions(isAuth, token));
   };
 
   useEffect(() => {
@@ -31,10 +34,11 @@ export function SignIn() {
       if (isAuth) {
         localStorage.setItem("token", token);
         navigate("/profile");
+        dispatch(profileActions(isAuth, token));
       }
     };
     datas();
-  }, [isAuth, navigate, token]);
+  }, [isAuth, navigate, token, dispatch]);
 
   return (
     <>
@@ -72,7 +76,7 @@ export function SignIn() {
               Sign In
             </button>
           </form>
-            {error && <p className="error">{error}</p>}
+          {error && <p className="error">{error}</p>}
         </section>
       </main>
       <Footer />
