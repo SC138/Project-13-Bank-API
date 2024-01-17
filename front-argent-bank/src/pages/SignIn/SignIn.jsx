@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/actions/loginActions";
-// import profileReducer from "../../store/reducers/profileReducer";
 import { profileActions } from "../../store/actions/profileActions.js";
 
 export function SignIn() {
@@ -26,7 +25,6 @@ export function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(login(formData));
-    dispatch(profileActions(isAuth, token));
   };
 
   useEffect(() => {

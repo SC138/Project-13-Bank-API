@@ -10,12 +10,18 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/sign-in" element={<SignIn />} />
       {isAuth ? (
-        <Route path="/profile" element={<UserProfile />} />
+        <>
+          <Route path="/" element={<Home />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/profile" element={<UserProfile />} />
+        </>
       ) : (
-        <Route path="/profile" element={<SignIn />} />
+        <>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<SignIn />} />
+          <Route path="/sign-in" element={<SignIn />} />
+        </>
       )}
     </Routes>
   );

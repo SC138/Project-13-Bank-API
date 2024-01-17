@@ -1,13 +1,26 @@
 import { NavBar } from "../../components/NavBar";
 import { Footer } from "../../components/Footer";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { profileActions } from "../../store/actions/profileActions.js";
 
 export function UserProfile() {
-  const user = useSelector((state) => state.profile);
-  console.log("🚀 ~ UserProfile ~ user:", user)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isAuth = useSelector((state) => state.login.isAuth);
+  const user = useSelector((state) => state.profile.body);
+
   const token = useSelector((state) => state.login.token);
-  console.log("🚀 ~ UserProfile ~ token:", token)
+
+  useEffect(() => {
+    if (!isAuth) {
+      navigate("/signIn");
+    } else {
+      dispatch(profileActions({ isAuth, token }));
+    }
+  }, [dispatch, isAuth, navigate, token]);
 
   return (
     <>
@@ -17,8 +30,7 @@ export function UserProfile() {
           <h1>
             Welcome back
             <br />
-            {`${user.firstname} ${user.lastname}`}!
-            {/* Tony Jarvis! */}
+            {`${user.firstName} ${user.lastName}`}!{/* Tony Jarvis! */}
           </h1>
           <button className="edit-button">Edit Name</button>
         </div>

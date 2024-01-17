@@ -3,8 +3,8 @@ const initialState = {
   body: {
     id: null,
     email: null,
-    firstname: null,
-    lastname: null,
+    firstName: null,
+    lastName: null,
   },
   isAuth: false,
 };
@@ -18,16 +18,14 @@ const profileReducer = (state = initialState, action) => {
         body: {
           id: action.payload.body.id,
           email: action.payload.body.email,
-          firstname: action.payload.body.firstname,
-          lastname: action.payload.body.lastname,
+          firstName: action.payload.body.firstName,
+          lastName: action.payload.body.lastName,
         },
         isAuth: true,
       };
     case "PROFILE_ERROR":
       return {
         ...state,
-        message: action.payload.message,
-        body: {},
         isAuth: false,
       };
     default:
