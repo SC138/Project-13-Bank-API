@@ -51,14 +51,24 @@ body {
   color: #42b983;
 }
 
-.main-nav-item {
+.main-nav-item,
+.main-nav-item-connect {
   text-decoration: none;
-  margin-right: 0.5rem;
+  margin-right: 0 0.5rem;
 }
 
-.main-nav-item:hover {
+.main-nav-item:hover,
+.main-nav-item-connect:hover {
   text-decoration: underline;
 }
+
+.fa-user-circle {
+  margin: 0 0.5rem;
+  }
+
+.user-connect {
+    margin: 0;
+  }
 
 .main-nav-logo {
   display: flex;

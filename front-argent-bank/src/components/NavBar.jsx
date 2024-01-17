@@ -1,6 +1,6 @@
 import logo from "../assets/img/argentBankLogo.png";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Outlet } from "react-router";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { logout } from "../store/actions/loginActions";
 
 export function NavBar() {
@@ -17,31 +17,31 @@ export function NavBar() {
   return (
     <>
       <nav className="main-nav">
-        <a className="main-nav-logo" href="/">
+        <Link className="main-nav-logo" to="/">
           <img
             className="main-nav-logo-image"
             src={logo}
             alt="Argent Bank Logo"
           />
           <h1 className="sr-only">Argent Bank</h1>
-        </a>
+        </Link>
         <div>
           {isAuth ? (
             <>
-              <a href="/profile">
-                <i className="fa fa-user-circle"></i>
+              <Link className="main-nav-item-connect" to="/profile">
+                <i className="fa fa-user-circle user-connect"></i>
                 {firstName}
-              </a>
-              <a className="main-nav-item" onClick={handleSignOut} href="/">
+              </Link>
+              <Link className="main-nav-item" onClick={handleSignOut} to="/">
                 <i className="fa fa-user-circle"></i>
                 Sign Out
-              </a>
+              </Link>
             </>
           ) : (
-            <a className="main-nav-item" href="./sign-in">
+            <Link className="main-nav-item" to="./sign-in">
               <i className="fa fa-user-circle"></i>
               Sign In
-            </a>
+            </Link>
           )}
         </div>
       </nav>
