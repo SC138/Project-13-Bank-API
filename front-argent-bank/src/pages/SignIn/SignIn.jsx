@@ -6,38 +6,54 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/actions/loginActions";
 import { profileActions } from "../../store/actions/profileActions.js";
 
+//Composant SignIn.
 export function SignIn() {
+  // Hooks de Redux pour dispatcher des actions et naviguer entre les composants.
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Sélection de l'état d'authentification, du token et de l'erreur depuis le store Redux.
   const isAuth = useSelector((state) => state.login.isAuth);
   const token = useSelector((state) => state.login.token);
   const error = useSelector((state) => state.login.error);
 
+  // État local pour le formulaire de connexion.
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  // Gère les changements dans les champs de formulaire et met à jour l'état local.
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
+  // Gère la soumission du formulaire, empêche l'envoi classique du formulaire et dispatch l'action de connexion.
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(login(formData));
   };
 
+  // Se déclenche après le rendu ou la mise à jour du composant.
   useEffect(() => {
+    // Fonction asynchrone pour effectuer des actions post-authentification.
     const datas = async () => {
+      // Si l'utilisateur est authentifié, stocke le token et navigue vers le profil.
       if (isAuth) {
+        // Stocke le token dans localStorage.
         localStorage.setItem("token", token);
+        // Redirige vers le profil utilisateur.
         navigate("/profile");
+        // Dispatch l'action pour récupérer les informations du profil.
         dispatch(profileActions(isAuth, token));
       }
     };
+    // Exécute la fonction asynchrone datas().
     datas();
+    //Dépendances du useEffect.
   }, [isAuth, navigate, token, dispatch]);
 
+  // Structure JSX du composant, incluant le formulaire de connexion.
   return (
     <>
       <NavBar />

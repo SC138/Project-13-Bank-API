@@ -5,23 +5,31 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { profileActions } from "../../store/actions/profileActions.js";
 
+// Définit le composant UserProfile.
 export function UserProfile() {
+  // Permet de dispatcher des actions Redux.
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Récupère l'état d'authentification et les informations de l'utilisateur depuis le store Redux.
   const isAuth = useSelector((state) => state.login.isAuth);
   const user = useSelector((state) => state.profile.body);
-
+  // Récupère le token depuis le store Redux.
   const token = useSelector((state) => state.login.token);
 
+  // useEffect qui se déclenche après le rendu du composant.
   useEffect(() => {
+    // Si l'utilisateur n'est pas authentifié, il est redirigé vers la page de connexion.
     if (!isAuth) {
       navigate("/signIn");
     } else {
+      // Si l'utilisateur est authentifié, dispatch l'action pour récupérer les infos du profil.
       dispatch(profileActions({ isAuth, token }));
     }
+    // Dépendances du useEffect.
   }, [dispatch, isAuth, navigate, token]);
 
+  // Rendu du composant, incluant NavBar, le contenu principal et Footer.
   return (
     <>
       <NavBar />

@@ -3,17 +3,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { logout } from "../store/actions/loginActions";
 
+// Définit le composant NavBar.
 export function NavBar() {
+  // Hooks de Redux pour dispatcher des actions et récupérer l'état d'authentification.
   const navigate = useNavigate();
+  // Permet de dispatcher des actions Redux.
   const dispatch = useDispatch();
+  // Récupère l'état d'authentification et le prénom de l'utilisateur depuis Redux.
   const isAuth = useSelector((state) => state.login.isAuth);
   const firstName = useSelector((state) => state.profile.body.firstName);
 
+  // Fonction pour gérer la déconnexion.
   function handleSignOut() {
+    // Dispatch l'action de déconnexion.
     dispatch(logout());
+    // Redirige vers la page d'accueil.
     navigate("/");
   }
 
+  // Structure JSX du composant NavBar.
   return (
     <>
       <nav className="main-nav">
@@ -45,6 +53,7 @@ export function NavBar() {
           )}
         </div>
       </nav>
+      {/* Outlet permet d'afficher le contenu des composants enfants. */}
       <Outlet />
     </>
   );
