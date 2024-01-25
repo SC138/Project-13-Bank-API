@@ -18,30 +18,40 @@ export function UserProfile() {
   // Récupère le token depuis le store Redux.
   const token = useSelector((state) => state.login.token);
 
-  //------------------------------------------------------------------------------
-
+  // Détermine si l'utilisateur est en train d'éditer son nom
   const [isEditing, setIsEditing] = useState(false);
+  // Stocke les valeurs du formulaire pour le prénom et le nom
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
   });
 
+  // Effet exécuté au montage du composant ou lorsque les dépendances changent
   useEffect(() => {
+    // Si l'utilisateur est authentifié
     if (isAuth) {
+      // Récupère les données du profil
       dispatch(profileActions({ isAuth, token }));
     } else {
+      // Sinon, redirige vers la page de connexion
       navigate("/signIn");
     }
+    // Dépendances de l'effet
   }, [dispatch, isAuth, navigate, token]);
 
+  // Gestionnaire d'événements pour activer le mode édition
   const handleEditName = () => {
+    // Active le mode édition
     setIsEditing(true);
   };
 
+  // Gestionnaire d'événements pour la soumission du formulaire
   const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(editName({ token, formData }));
-    dispatch(profileActions({ isAuth, token }));
+    e.preventDefault(); // Empêche le comportement par défaut du formulaire
+    dispatch(editName({ token, formData })); // Envoie les données éditées
+    dispatch(profileActions({ isAuth, token })); // Recharge les données du profil
+
+    // Réinitialise le formulaire et désactive le mode édition
     setFormData({
       firstname: "",
       lastname: "",
@@ -49,18 +59,18 @@ export function UserProfile() {
     setIsEditing(false);
   };
 
+  // Gestionnaire d'événements pour annuler l'édition
   const handleCancel = () => {
-    setIsEditing(false);
+    setIsEditing(false); // Désactive le mode édition
   };
 
+  // Gestionnaire d'événements pour les changements dans le formulaire
   const handleChange = (e) => {
     setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+      ...formData, // Copie les valeurs existantes
+      [e.target.name]: e.target.value, // Met à jour la valeur du champ modifié
     });
   };
-
-  //-----------------------------------------------------------
 
   // useEffect qui se déclenche après le rendu du composant.
   useEffect(() => {
@@ -94,6 +104,7 @@ export function UserProfile() {
                   name="firstname"
                   onChange={handleChange}
                   placeholder={user.body.firstName}
+                  required
                 />
                 <input
                   type="text"
@@ -101,6 +112,7 @@ export function UserProfile() {
                   name="lastname"
                   onChange={handleChange}
                   placeholder={user.body.lastName}
+                  required
                 />
                 <button type="submit" className="save-button">
                   Save

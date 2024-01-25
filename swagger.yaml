@@ -1,9 +1,9 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: Bank Argent API documentation
   description: Contains all available API endpoints in this codebase
-  version: '1.0.0'
-  termsOfService: 'http://swagger.io/terms/'
+  version: "1.0.0"
+  termsOfService: "http://swagger.io/terms/"
 host: localhost:3001
 basePath: /api/v1
 schemes:
@@ -21,17 +21,17 @@ paths:
           description: Login Payload
           required: true
           schema:
-            $ref: '#/definitions/Login'
+            $ref: "#/definitions/Login"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Login Successfully
           schema:
-            $ref: '#/definitions/LoginResponse'
-        '400':
+            $ref: "#/definitions/LoginResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
   /user/signup:
     post:
@@ -45,17 +45,17 @@ paths:
           description: Signup Payload
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: "#/definitions/User"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Signup Successfully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
   /user/profile:
     post:
@@ -73,13 +73,13 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: User profile retrieved successully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
     put:
       security:
@@ -98,18 +98,103 @@ paths:
           description: Update user profile attributes
           required: true
           schema:
-            $ref: '#/definitions/UserProfile'
+            $ref: "#/definitions/UserProfile"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: User profile retrieved successully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
+  /transactions:
+    get:
+      tags:
+        - Transactions Module
+      summary: List Transactions
+      description: Retrieves all transactions for the authenticated user.
+      # Utilise un token Bearer pour l'authentification. L'utilisateur doit être authentifié pour accéder à cette route.
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: An array of transactions
+          # Spécifie que la réponse sera un tableau d'objets 'Transaction'.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Transaction"
+        "401":
+          description: Unauthorized access
+          # Retourne un statut 401 si l'utilisateur n'est pas authentifié ou si le token est invalide.
+
+  /transactions/{transactionId}:
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        type: string
+        # Paramètre 'transactionId' dans le chemin d'accès pour identifier la transaction spécifique.
+    get:
+      tags:
+        - Transactions Module
+      summary: Get Transaction
+      description: Retrieves details of a specific transaction.
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: Transaction details
+          # Renvoie les détails de la transaction spécifiée.
+          schema:
+            $ref: "#/definitions/Transaction"
+        "401":
+          description: Unauthorized access
+        "404":
+          description: Transaction not found
+          # Retourne un statut 404 si la transaction spécifiée n'est pas trouvée.
+    put:
+      tags:
+        - Transactions Module
+      summary: Update Transaction
+      description: Updates a specific transaction.
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionUpdate"
+            # Corps de la requête nécessaire pour mettre à jour la transaction, basé sur 'TransactionUpdate'.
+      responses:
+        "200":
+          description: Transaction updated
+          # Indique que la transaction a été mise à jour avec succès.
+        "401":
+          description: Unauthorized access
+        "404":
+          description: Transaction not found
+          # Indique que la transaction à mettre à jour n'a pas été trouvée.
+    delete:
+      tags:
+        - Transactions Module
+      summary: Delete Transaction
+      description: Deletes a specific transaction.
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: Transaction deleted
+          # Indique que la transaction a été supprimée avec succès.
+        "401":
+          description: Unauthorized access
+        "404":
+          description: Transaction not found
+          # Indique que la transaction à supprimer n'a pas été trouvée.
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -164,3 +249,67 @@ definitions:
         type: string
       lastName:
         type: string
+  Transaction:
+    type: object
+    properties:
+      id:
+        type: string
+        # L'identifiant unique de la transaction, généralement une chaîne de caractères.
+      type:
+        type: string
+        description: Type of transaction (withdrawal, deposit, etc.)
+        # Spécifie le type de transaction, par exemple retrait, dépôt, paiement, etc.
+      amount:
+        type: number
+        format: float
+        # Le montant de la transaction. Le format 'float' permet des valeurs décimales.
+      date:
+        type: string
+        format: date
+        # La date de la transaction, stockée sous forme de chaîne de caractères au format date.
+      category:
+        type: string
+        description: Category of the transaction
+        # Catégorie de la transaction pour la classification (par exemple, repas, logement).
+      notes:
+        type: string
+        description: Additional notes about the transaction
+        # Champ facultatif pour ajouter des notes supplémentaires à la transaction.
+
+  TransactionUpdate:
+    type: object
+    properties:
+      type:
+        type: string
+        description: Type of transaction (withdrawal, deposit, etc.)
+        # Permet de changer le type de la transaction lors de la mise à jour.
+      amount:
+        type: number
+        format: float
+        # Montant de la transaction pouvant être mis à jour. Utilise le format 'float'.
+      date:
+        type: string
+        format: date
+        # Date de la transaction pouvant être mise à jour.
+      category:
+        type: string
+        description: Category of the transaction
+        # Permet de mettre à jour la catégorie de la transaction.
+      notes:
+        type: string
+        description: Additional notes about the transaction
+        # Permet d'ajouter ou de mettre à jour des notes sur la transaction.
+
+  Category:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of the category
+
+  Note:
+    type: object
+    properties:
+      content:
+        type: string
+        description: Content of the note
