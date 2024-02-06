@@ -2,6 +2,8 @@ import logo from "../assets/img/argentBankLogo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { logout } from "../store/actions/loginActions";
+import userIcon from "../assets/img/user-icon.svg";
+import logoutIcon from "../assets/img/logout-icon.svg";
 
 // Définit le composant NavBar.
 export function NavBar() {
@@ -38,10 +40,12 @@ export function NavBar() {
             <>
               <Link className="main-nav-item-connect" to="/profile">
                 <i className="fa fa-user-circle user-connect"></i>
+                <img src={userIcon} alt="User Profile" className="user-icon" />
                 {firstName}
               </Link>
               <Link className="main-nav-item" onClick={handleSignOut} to="/">
                 <i className="fa fa-user-circle"></i>
+                <img src={logoutIcon} alt="Logout" className="logout-icon" />
                 Sign Out
               </Link>
             </>

@@ -115,21 +115,51 @@ paths:
       tags:
         - Transactions Module
       summary: List Transactions
-      description: Retrieves all transactions for the authenticated user.
-      # Utilise un token Bearer pour l'authentification. L'utilisateur doit être authentifié pour accéder à cette route.
+      description: Retrieves a paginated list of transactions for the authenticated user with optional filtering by date and type. 
+      # Récupère une liste paginée de transactions pour l'utilisateur authentifié avec un filtrage optionnel par date et type.
       security:
         - Bearer: []
+      parameters:
+        - in: query
+          name: startDate
+          type: string
+          format: date
+          required: false
+          description: Start date to filter transactions, defaults to the first of the current month if not specified. 
+          # La date de début pour filtrer les transactions, par défaut au premier du mois en cours si non spécifiée.
+          default: "2024-02-01" # Date à générer dynamiquement dans l'application.
+        - in: query
+          name: endDate
+          type: string
+          format: date
+          required: false
+          description: End date to filter transactions. # Fin de la période pour filtrer les transactions.
+        - in: query
+          name: type
+          type: string
+          required: false
+          description: Type of transactions to filter (withdrawal, deposit, etc.). # Type de transactions à filtrer (retrait, dépôt, etc.).
+        - in: query
+          name: page
+          type: integer
+          required: false
+          default: 1
+          description: Page number for pagination. # Numéro de page pour la pagination.
+        - in: query
+          name: limit
+          type: integer
+          required: false
+          default: 30
+          description: Number of transactions per page. # Nombre de transactions par page.
       responses:
         "200":
-          description: An array of transactions
-          # Spécifie que la réponse sera un tableau d'objets 'Transaction'.
+          description: A paginated array of transactions. # Retourne un tableau paginé de transactions.
           schema:
             type: array
             items:
               $ref: "#/definitions/Transaction"
         "401":
-          description: Unauthorized access
-          # Retourne un statut 401 si l'utilisateur n'est pas authentifié ou si le token est invalide.
+          description: Unauthorized access. # Accès non autorisé.
 
   /transactions/{transactionId}:
     parameters:
@@ -142,7 +172,7 @@ paths:
       tags:
         - Transactions Module
       summary: Get Transaction
-      description: Retrieves details of a specific transaction.
+      description: Retrieves details of a specific transaction. # Récupère les détails d'une transaction spécifique.
       security:
         - Bearer: []
       responses:
@@ -153,6 +183,7 @@ paths:
             $ref: "#/definitions/Transaction"
         "401":
           description: Unauthorized access
+          # Accès non autorisé.
         "404":
           description: Transaction not found
           # Retourne un statut 404 si la transaction spécifiée n'est pas trouvée.
@@ -160,10 +191,14 @@ paths:
       tags:
         - Transactions Module
       summary: Update Transaction
-      description: Updates a specific transaction.
+      description: Updates categories and notes for a specific transaction. # Met à jour les catégories et les notes pour une transaction spécifique.
       security:
         - Bearer: []
       parameters:
+        - name: transactionId
+          in: path
+          required: true
+          type: string
         - in: body
           name: body
           required: true
@@ -182,19 +217,25 @@ paths:
     delete:
       tags:
         - Transactions Module
-      summary: Delete Transaction
-      description: Deletes a specific transaction.
+      summary: Delete Transaction Details
+      description: Deletes categories and notes associated with a specific transaction without deleting the transaction itself. # Supprime les catégories et les notes associées à une transaction spécifique sans supprimer la transaction elle-même.
       security:
         - Bearer: []
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          type: string
       responses:
         "200":
-          description: Transaction deleted
-          # Indique que la transaction a été supprimée avec succès.
+          description: Categories and notes associated with the transaction deleted successfully. 
+          # Indique que les catégories et les notes associées à la transaction ont été supprimées avec succès.
         "401":
-          description: Unauthorized access
+          description: Unauthorized access. 
+          # Accès non autorisé.
         "404":
-          description: Transaction not found
-          # Indique que la transaction à supprimer n'a pas été trouvée.
+          description: Transaction not found or no associated details exist. 
+          # Indique que la transaction n'a pas été trouvée ou qu'aucun détail associé n'existe.
 securityDefinitions:
   Bearer:
     type: apiKey

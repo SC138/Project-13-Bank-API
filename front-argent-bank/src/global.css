@@ -62,6 +62,22 @@ body {
   text-decoration: underline;
 }
 
+
+.user-icon {
+  width: 20px; 
+  height: auto; 
+  margin-right: 8px; 
+  vertical-align: middle;
+}
+
+.logout-icon {
+  height: 16px; 
+  width: auto;
+  margin-right: 8px; 
+  vertical-align: middle; 
+}
+
+
 .fa-user-circle {
   margin: 0 0.5rem;
   }
